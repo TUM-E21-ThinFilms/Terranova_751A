@@ -27,7 +27,7 @@ setup(
     author='Alexander Book',
     author_email='alexander.book@frm2.tum.de',
     license = 'GNU General Public License (GPL), Version 3',
-    url='https://github.com/TUM-E21-ThinFilms/ADL-x.547',
+    url='https://github.com/TUM-E21-ThinFilms/Terranova_751A',
     description=desc,
     long_description=open('README.md').read(),
     packages=find_packages(),
