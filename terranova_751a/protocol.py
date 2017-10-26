@@ -47,7 +47,7 @@ class Terranova751AProtocol(Loggable):
             raw_msg = message.get_message()
             self._logger.debug('Sending: %s', repr(raw_msg))
             with transport:
-                transport.write(message)
+                transport.write(raw_msg)
                 response = self.get_response(transport)
             self._logger.debug('Response: %s', repr(response))
             return Response(response)
