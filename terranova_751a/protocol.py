@@ -15,20 +15,16 @@
 
 from e21_util.lock import InterProcessTransportLock
 from e21_util.error import CommunicationError
+from e21_util.interface import Loggable
 
 from slave.protocol import Protocol
 from slave.transport import Timeout
 from message import Message, Response, GetData, SetData
 
-class Terranova751AProtocol(Protocol):
+
+class Terranova751AProtocol(Loggable):
     def __init__(self, logger):
-        self._logger = logger
-
-    def set_logger(self, logger):
-        self._logger = logger
-
-    def get_logger(self):
-        return self._logger
+        super(Terranova751AProtocol, self).__init__(logger)
 
     def clear(self, transport):
         with InterProcessTransportLock(transport):
@@ -49,11 +45,11 @@ class Terranova751AProtocol(Protocol):
     def _do_communicate(self, transport, message):
         with InterProcessTransportLock(transport):
             raw_msg = message.get_message()
-            self.logger.debug('Sending: %s', repr(raw_msg))
+            self._logger.debug('Sending: %s', repr(raw_msg))
             with transport:
                 transport.write(message)
                 response = self.get_response(transport)
-            self.logger.debug('Response: %s', repr(response))
+            self._logger.debug('Response: %s', repr(response))
             return Response(response)
 
     def query(self, transport, message):
@@ -73,5 +69,3 @@ class Terranova751AProtocol(Protocol):
             raise ValueError("message is not a write-message")
 
         return self._do_communicate(transport, message)
-
-
