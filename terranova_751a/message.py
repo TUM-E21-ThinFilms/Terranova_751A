@@ -43,7 +43,7 @@ class Data(object):
 
 class GetData(Data):
     def get_data(self):
-        return "".join(self._mnemonic, '?')
+        return "".join([self._mnemonic, '?'])
 
 class SetData(Data):
     def __init__(self, mnemonic, value):
