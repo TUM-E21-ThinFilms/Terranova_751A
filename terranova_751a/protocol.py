@@ -38,7 +38,7 @@ class Terranova751AProtocol(Loggable):
 
     def get_response(self, transport):
         try:
-            return transport.read_until("\r")
+            return transport.read_until("\r") + "\r"
         except slave.transport.Timeout:
             raise CommunicationError("Received a timeout")
 
