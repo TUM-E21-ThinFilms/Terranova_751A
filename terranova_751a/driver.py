@@ -15,8 +15,8 @@
 
 from message import GetData, SetData, Message
 
-class Terranova751ADriver(object):
 
+class Terranova751ADriver(object):
     UNIT_TORR = 'Torr'
     UNIT_MBAR = 'mBar'
     UNIT_PASCAL = 'Pascal'
@@ -32,7 +32,6 @@ class Terranova751ADriver(object):
 
     HV_POLARITY_POSITIVE = 'Pos'
     HV_POLARTIY_NEGATIVE = 'Neg'
-
 
     def __init__(self, transport, protocol):
         self._transport = transport
@@ -53,7 +52,7 @@ class Terranova751ADriver(object):
         raise RuntimeError("Write was not successful")
 
     def get_model_number(self):
-        return self._query_message(GetData('MO'))
+        return str(self._query_message(GetData('MO')))
 
     def get_firmware_version(self):
         return float(self._query_message(GetData('VE')))
@@ -70,7 +69,7 @@ class Terranova751ADriver(object):
     def get_status(self):
         stat = self._query_message(GetData('ST'))
         if stat in [self.STATUS_RUNNING, self.STATUS_COOLING, self.STATUS_INTERLOCK, self.STATUS_OFF, self.STATUS_SHUTDOWN]:
-            return stat
+            return str(stat)
 
         raise RuntimeError("Received unknown status '%s'" % stat)
 
@@ -96,15 +95,17 @@ class Terranova751ADriver(object):
         if on_off in [self.HV_OFF, self.HV_ON]:
             return on_off
 
-        raise RuntimeError("Received unknown on/off signal '%s'" %on_off)
+        raise RuntimeError("Received unknown on/off signal '%s'" % on_off)
 
     def get_maximum_current(self):
+        # in mA
         return float(self._query_message(GetData('MC')))
 
     def get_setpoint(self):
         return float(self._query_message(GetData('SP')))
 
     def get_maximum_voltage(self):
+        # in V
         return float(self._query_message(GetData('MV')))
 
     def set_pressure_unit(self, unit):
@@ -133,14 +134,14 @@ class Terranova751ADriver(object):
         self._write_message(SetData('SP', "%.1f" % setpoint))
 
     def set_maximum_voltage(self, voltage):
-        voltage = int(voltage) # voltage in V
+        voltage = int(voltage)  # voltage in V
         # voltage will be rounded to the nearest 500 Volts
         if voltage > 9999 or voltage < 0:
             raise ValueError("Voltag must be in range (10000, 0)")
         self._write_message(SetData('MV', voltage))
 
     def set_maxmimum_current(self, current):
-        current = int(current) # current in mA
+        current = int(current)  # current in mA
         if not (0 < current < 25):
             raise ValueError("Current must be in range[1, 25]")
 

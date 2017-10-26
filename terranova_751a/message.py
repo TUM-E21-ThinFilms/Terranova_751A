@@ -47,11 +47,11 @@ class GetData(Data):
 
 class SetData(Data):
     def __init__(self, mnemonic, value):
-        super(SetData, self).__init__(mnmnemonic)
+        super(SetData, self).__init__(mnemonic)
         self._value = str(value)
 
     def get_data(self):
-        return "".join(self._mnemonic, ":", self._value)
+        return "".join([self._mnemonic, ":", self._value])
 
 
 class Response(object):
