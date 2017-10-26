@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from e21_util.log import get_sputter_logger
 from e21_util.ports import Ports
+from e21_util.transport import Serial
 
 from driver import Terranova751ADriver
 from protocol import Terranova751AProtocol
