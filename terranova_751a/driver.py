@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from message import GetData, SetData, Message
+from terranova_751a.message import GetData, SetData, Message
 
 
 class Terranova751ADriver(object):
@@ -58,12 +58,14 @@ class Terranova751ADriver(object):
         return float(self._query_message(GetData('VE')))
 
     def get_current(self):
+        # in A
         return float(self._query_message(GetData('CU')))
 
     def get_pressure(self):
         return float(self._query_message(GetData('PR')))
 
     def get_voltage(self):
+        # in V
         return float(self._query_message(GetData('VO')))
 
     def get_status(self):
@@ -98,7 +100,7 @@ class Terranova751ADriver(object):
         raise RuntimeError("Received unknown on/off signal '%s'" % on_off)
 
     def get_maximum_current(self):
-        # in mA
+        # in A
         return float(self._query_message(GetData('MC')))
 
     def get_setpoint(self):

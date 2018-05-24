@@ -13,13 +13,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import slave
+
 from e21_util.lock import InterProcessTransportLock
 from e21_util.error import CommunicationError
 from e21_util.interface import Loggable
 
-from slave.protocol import Protocol
 from slave.transport import Timeout
-from message import Message, Response, GetData, SetData
+from terranova_751a.message import Message, Response, GetData, SetData
 
 
 class Terranova751AProtocol(Loggable):
@@ -33,7 +34,7 @@ class Terranova751AProtocol(Loggable):
             try:
                 while True:
                     transport.read_bytes(32)
-            except Timeout:
+            except slave.transport.Timeout:
                 return
 
     def get_response(self, transport):

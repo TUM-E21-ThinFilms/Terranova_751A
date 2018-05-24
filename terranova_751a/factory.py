@@ -16,8 +16,8 @@ from e21_util.log import get_sputter_logger
 from e21_util.ports import Ports
 from e21_util.transport import Serial
 
-from driver import Terranova751ADriver
-from protocol import Terranova751AProtocol
+from terranova_751a.driver import Terranova751ADriver
+from terranova_751a.protocol import Terranova751AProtocol
 
 class Terranova751AFactory:
     def get_logger(self):
