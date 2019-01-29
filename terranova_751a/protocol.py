@@ -26,6 +26,7 @@ class Terranova751AProtocol(Loggable):
         assert isinstance(transport, AbstractTransport)
 
         super(Terranova751AProtocol, self).__init__(logger)
+
         self._transport = transport
 
     def clear(self):

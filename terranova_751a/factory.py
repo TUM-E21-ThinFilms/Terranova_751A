@@ -15,7 +15,6 @@
 from e21_util.log import get_sputter_logger
 from e21_util.port.insitu import Ports
 
-
 from terranova_751a.driver import Terranova751ADriver
 from terranova_751a.protocol import Terranova751AProtocol
 
@@ -31,5 +30,4 @@ class Terranova751AFactory:
         if transport is None:
             transport = Ports().get_transport(Ports.DEVICE_TERRANOVA)
 
-        protocol = Terranova751AProtocol(logger)
-        return Terranova751ADriver(transport, protocol)
+        return Terranova751ADriver(Terranova751AProtocol(transport, logger))

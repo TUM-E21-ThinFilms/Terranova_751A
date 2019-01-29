@@ -15,7 +15,7 @@
 
 from terranova_751a.message import GetData, SetData, Message
 from terranova_751a.protocol import Terranova751AProtocol
-from e21_util.serial_connection import AbstractTransport
+
 
 class Terranova751ADriver(object):
     UNIT_TORR = 'Torr'
@@ -34,26 +34,24 @@ class Terranova751ADriver(object):
     HV_POLARITY_POSITIVE = 'Pos'
     HV_POLARTIY_NEGATIVE = 'Neg'
 
-    def __init__(self, transport, protocol):
-        assert isinstance(transport, AbstractTransport)
+    def __init__(self, protocol):
         assert isinstance(protocol, Terranova751AProtocol)
 
-        self._transport = transport
         self._protocol = protocol
 
     def _query_message(self, get_data):
-        msg = Message(get_data)
-        response = self._protocol.query(self._transport, msg)
-        if response.is_success():
-            return response.get_data()
-        raise RuntimeError("Query was not successful")
+        response = self._protocol.query(Message(get_data))
+        if not response.is_success():
+            raise RuntimeError("Query was not successful")
+
+        return response.get_data()
 
     def _write_message(self, set_data):
-        msg = Message(set_data)
-        response = self._protocol.write(self._transport, msg)
-        if response.is_success():
-            return response.get_data()
-        raise RuntimeError("Write was not successful")
+        response = self._protocol.write(Message(set_data))
+        if not response.is_success():
+            raise RuntimeError("Write was not successful")
+
+        return response.get_data()
 
     def get_model_number(self):
         return str(self._query_message(GetData('MO')))
@@ -74,7 +72,8 @@ class Terranova751ADriver(object):
 
     def get_status(self):
         stat = self._query_message(GetData('ST'))
-        if stat in [self.STATUS_RUNNING, self.STATUS_COOLING, self.STATUS_INTERLOCK, self.STATUS_OFF, self.STATUS_SHUTDOWN]:
+        if stat in [self.STATUS_RUNNING, self.STATUS_COOLING, self.STATUS_INTERLOCK, self.STATUS_OFF,
+                    self.STATUS_SHUTDOWN]:
             return str(stat)
 
         raise RuntimeError("Received unknown status '%s'" % stat)
@@ -115,7 +114,7 @@ class Terranova751ADriver(object):
         return float(self._query_message(GetData('MV')))
 
     def set_pressure_unit(self, unit):
-        if not unit in [self.UNIT_MBAR, self.UNIT_PASCAL, self.UNIT_TORR]:
+        if unit not in [self.UNIT_MBAR, self.UNIT_PASCAL, self.UNIT_TORR]:
             raise ValueError("Given unit '%s' is unknown" % unit)
 
         self._write_message(SetData('UN', unit))
@@ -130,7 +129,7 @@ class Terranova751ADriver(object):
         self._write_message(SetData('PS', liters_per_second))
 
     def set_hv(self, on_or_off):
-        if not on_or_off in [self.HV_OFF, self.HV_ON]:
+        if on_or_off not in [self.HV_OFF, self.HV_ON]:
             raise ValueError("Given parameter '%s' is unknown" % on_or_off)
 
         self._write_message(SetData('HV', on_or_off))
@@ -144,6 +143,7 @@ class Terranova751ADriver(object):
         # voltage will be rounded to the nearest 500 Volts
         if voltage > 9999 or voltage < 0:
             raise ValueError("Voltag must be in range (10000, 0)")
+
         self._write_message(SetData('MV', voltage))
 
     def set_maxmimum_current(self, current):
