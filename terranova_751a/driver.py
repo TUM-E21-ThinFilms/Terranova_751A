@@ -14,7 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from terranova_751a.message import GetData, SetData, Message
-
+from terranova_751a.protocol import Terranova751AProtocol
+from e21_util.serial_connection import AbstractTransport
 
 class Terranova751ADriver(object):
     UNIT_TORR = 'Torr'
@@ -34,6 +35,9 @@ class Terranova751ADriver(object):
     HV_POLARTIY_NEGATIVE = 'Neg'
 
     def __init__(self, transport, protocol):
+        assert isinstance(transport, AbstractTransport)
+        assert isinstance(protocol, Terranova751AProtocol)
+
         self._transport = transport
         self._protocol = protocol
 
